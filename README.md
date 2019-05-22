@@ -1,4 +1,5 @@
 # Artificial-Intelligence
+
 AI Algorithms
 
 
@@ -10,7 +11,6 @@ It currently having Breath First Search and Depth First Search, Other type of se
 --Installation
 searches runs on python 3.x. You can install the python requirements with
 `python3 -m pip install pandas`.
-clone searches with 'git clone <https://github.com/abecus/searches.git'>.
 
 ### Using Searches
 
