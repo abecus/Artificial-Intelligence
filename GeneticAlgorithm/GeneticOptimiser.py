@@ -1,5 +1,4 @@
 #%%
-import os
 import math
 import numpy as np
 import random
@@ -7,13 +6,29 @@ import random
 #%%
 class GeneticOptimiser():
 
-    def __init__(self, number_of_cromosomes, length_of_cromosomes,  fitness_function, lowest_gene_value=0, highest_gene_value=9, step_size=1, *args, **kwargs):
+    def __init__(self, number_of_cromosomes, length_of_cromosomes,  fitness_function, lowest_gene_value=0, highest_gene_value=9, step_size=1, feed_cromosoms=False, *args, **kwargs):
+        '''
+        * number_of_cromosomes (integer), it corresponds to population.
+
+        * length_of_cromosomes (integer).
+
+        * fitness_function must be in lamba function form.
+
+        * lowest_gene_value (integer).
+
+        * highest_gene_value (integer).
+
+        * step_size (float), it corresponds to the granuality in gene values.
+
+        * feed_cromosoms: to feed your own custom cromosomes values directly, else it is False.
+        '''
         self.FitnessFunction = fitness_function
         self.StepSize = step_size
         self.Low = lowest_gene_value
         self.High = highest_gene_value
         self.number = number_of_cromosomes
         self.length = length_of_cromosomes
+        self.feed_cromosomes = feed_cromosomes
 
 
     def rand_with_step(self, size='tup'):
@@ -30,14 +45,19 @@ class GeneticOptimiser():
 
 
     def initialise(self):
-        ''' initiallising the cromosomes '''
+
+        if self.feed_cromosomes:
+            self.cromosomes = self.feed_cromosomes
+
+        ''' randomly initiallising the cromosomes '''
         self.cromosomes = self.rand_with_step(size=(self.number, self.length))
 
 
     def mutation(self, maxnumber=0.45, alpha=1):
         ''' 
-        * alpha from 0 to 1 controles how much of the Cromosomes will get mutated 
-        * maxnumber is for maximum how much gene is to be mutated 
+        * alpha from 0 to 1 controles how much of the Cromosomes will get mutated.
+
+        * maxnumber is for maximum how much gene is to be mutated.
         '''
 
         for i in range(math.ceil(alpha*self.number)):
@@ -58,7 +78,8 @@ class GeneticOptimiser():
         ''' 
         it will do uniform crossover in the cromosomes
 
-        * gamma defines how much top percentile of cromosomes will cross over 
+        * gamma defines how much top percentile of cromosomes will cross over
+
         * beta is for how much genes will cross over
         '''
         n = math.ceil(gamma*self.number)
@@ -74,6 +95,7 @@ class GeneticOptimiser():
     def evolve(self, reverse=True):
         '''
         sorts the cromosome w.r.t. their fitness function and returns first best NumberOfCromosomes.
+
         * reverse is whether to put the genes in ascending(False) or descending(True) order.
         '''
         self.cromosomes = sorted(self.cromosomes, key=self.FitnessFunction, reverse=reverse)
@@ -84,9 +106,11 @@ class GeneticOptimiser():
             alpha=1, type='uniform', beta=0.45, gamma=0.45, reverse=True):
 
         '''
-        * runs a simple optimiser. 
+        * runs a simple optimiser.
+
         * it can be customised .
-        * if we want it we can define our own optimiser using mutation, crossover and evolve mathods.
+
+        * if we want it we can define our own optimiser using mutation, crossover and evolve mathods over an instance.
         '''    
 
         epsilon = 0
@@ -94,18 +118,18 @@ class GeneticOptimiser():
         iterations = iterations
         i = 0
 
-        croms.initialise()
-        croms.evolve(reverse=True)
+        self.initialise()
+        self.evolve(reverse=True)
 
         while epsilon < thres:
 
-            croms.crossover(type='uniform', beta=0.45, gamma=0.45)
+            self.crossover(type='uniform', beta=0.45, gamma=0.45)
             
-            croms.mutation(maxnumber=0.45, alpha=1)
-            croms.evolve(reverse=True)
+            self.mutation(maxnumber=0.45, alpha=1)
+            self.evolve(reverse=True)
             
-            best_crom = croms.cromosomes[0]
-            epsilon = croms.FitnessFunction(best_crom)
+            best_crom = self.cromosomes[0]
+            epsilon = self.FitnessFunction(best_crom)
 
             if i >= iterations:
                 break
@@ -121,4 +145,3 @@ if __name__ == "__main__":
             highest_gene_value=1, step_size=1, fitness_function=(lambda x: x[0]-x[1]+x[2]-x[3]))
 
     croms.run(threshold=2)
-
