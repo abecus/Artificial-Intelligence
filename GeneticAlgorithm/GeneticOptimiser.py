@@ -6,7 +6,7 @@ import random
 #%%
 class GeneticOptimiser():
 
-    def __init__(self, number_of_cromosomes, length_of_cromosomes,  fitness_function, lowest_gene_value=0, highest_gene_value=9, step_size=1, feed_cromosoms=False, *args, **kwargs):
+    def __init__(self, number_of_cromosomes, length_of_cromosomes,  fitness_function, lowest_gene_value=0, highest_gene_value=9, step_size=1, feed_cromosomes=False, *args, **kwargs):
         '''
         * number_of_cromosomes (integer), it corresponds to population.
 
@@ -20,7 +20,7 @@ class GeneticOptimiser():
 
         * step_size (float), it corresponds to the granuality in gene values.
 
-        * feed_cromosoms: to feed your own custom cromosomes values directly, else it is False.
+        * feed_cromosoms:True to feed your own custom cromosomes values directly in initialise method, else it is False.
         '''
         self.FitnessFunction = fitness_function
         self.StepSize = step_size
@@ -44,13 +44,24 @@ class GeneticOptimiser():
         return val
 
 
-    def initialise(self):
+    def initialise(self, manual_cromosomes='NaN'):
 
         if self.feed_cromosomes:
-            self.cromosomes = self.feed_cromosomes
+            ''' manually initiallising the cromosomes '''
 
-        ''' randomly initiallising the cromosomes '''
-        self.cromosomes = self.rand_with_step(size=(self.number, self.length))
+            if manual_cromosomes.shape[0] < self.number:
+                self.cromosomes = np.vstack((manual_cromosomes, 
+                self.rand_with_step(size=(self.number - manual_cromosomes.shape[0], self.length))))
+            
+            elif manual_cromosomes.shape[0] >= self.number:
+                self.cromosomes = manual_cromosomes[: self.number]
+
+            else: 
+                self.cromosomes = manual_cromosomes
+
+        else:
+            ''' randomly initiallising the cromosomes '''
+            self.cromosomes = self.rand_with_step(size=(self.number, self.length))
 
 
     def mutation(self, maxnumber=0.45, alpha=1):
@@ -106,42 +117,67 @@ class GeneticOptimiser():
             alpha=1, type='uniform', beta=0.45, gamma=0.45, reverse=True):
 
         '''
-        * runs a simple optimiser.
+        * runs a simple optimiser. needs to give a threshold that is indicator of minimum fitness value we want
+         and also when to halt the optimiser 
 
         * it can be customised .
 
         * if we want it we can define our own optimiser using mutation, crossover and evolve mathods over an instance.
         '''    
 
-        epsilon = 0
         thres = threshold
         iterations = iterations
         i = 0
 
         self.initialise()
-        self.evolve(reverse=True)
-
-        while epsilon < thres:
-
-            self.crossover(type='uniform', beta=0.45, gamma=0.45)
+        self.evolve(reverse)
             
-            self.mutation(maxnumber=0.45, alpha=1)
-            self.evolve(reverse=True)
-            
-            best_crom = self.cromosomes[0]
-            epsilon = self.FitnessFunction(best_crom)
+        if reverse==True:  
 
-            if i >= iterations:
-                break
-            i += 1
+            while epsilon < thres:
+                self.crossover(type='uniform', beta=0.45, gamma=0.45)
+                    
+                self.mutation(maxnumber=0.45, alpha=1)
+                self.evolve(reverse)
+                    
+                best_crom = self.cromosomes[0]
+                epsilon = self.FitnessFunction(best_crom)
 
+                if i >= iterations:
+                    break
+                i += 1
+
+        if reverse==False:  
+
+            while epsilon > thres:
+
+                self.crossover(type='uniform', beta=0.45, gamma=0.45)
+                    
+                self.mutation(maxnumber=0.45, alpha=1)
+                self.evolve(reverse)
+                    
+                best_crom = self.cromosomes[0]
+                epsilon = self.FitnessFunction(best_crom)
+
+                if i >= iterations:
+                    break
+                i += 1
+        
         print(f'best cromosomes found is {best_crom},  with {epsilon} fitness value and in {i} iterations')
 
 
 #%%
 if __name__ == "__main__":
 
-    croms = GeneticOptimiser(number_of_cromosomes=50, length_of_cromosomes=4, lowest_gene_value=0,
-            highest_gene_value=1, step_size=1, fitness_function=(lambda x: x[0]-x[1]+x[2]-x[3]))
+    # croms = GeneticOptimiser(number_of_cromosomes=5, length_of_cromosomes=4, lowest_gene_value=0,
+    #         highest_gene_value=1, step_size=1, fitness_function=(lambda x: x[0]-x[1]+x[2]-x[3]))
 
-    croms.run(threshold=2)
+    # croms.run(threshold=2)
+
+    own_croms = np.array([[1, 0], [0, 0]])
+
+    croms = GeneticOptimiser(number_of_cromosomes=2, length_of_cromosomes=2, lowest_gene_value=0,
+                highest_gene_value=1, step_size=1, feed_cromosomes=True, fitness_function=(lambda x: x[0]-x[1]))
+
+    croms.initialise(manual_cromosomes=own_croms)
+    print(croms.cromosomes)

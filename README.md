@@ -2,7 +2,6 @@
 
 AI Algorithms
 
-
 ## 1. searches
 
 seaerches is a python script use to apply searches on graphs, trees or search spaces.
@@ -21,6 +20,7 @@ starting_node: start node in graph.
 end_node: end node in graph.
 
 search_type: choose any from:-
+
 * dfs (Depth First Search)
 * bfs (Breadth First Search)
 * hill_climbing (Hill Climbing Algorithm)
@@ -113,3 +113,44 @@ first, second, third and fourth columns consists the nodes 'From' at where an ed
         ['a', '-->', 'b', '-->', 'd', '-->', 'f', '-->', 'g']
         4
         14.0
+
+
+## 2. GeneticOptimiser
+
+Genetic Optimiser is python script which try to mimic the natural evolution (that, survival of the fittest).
+It currently provides some customisable methods like mutation, crossover and evolution types.
+
+--Installation
+searches runs on python 3.x. You can install the python requirements with
+`python3 -m pip install numpy`.
+
+### Using GeneticOptimiser
+
+    GeneticOptimiser(number_of_cromosomes=50, length_of_cromosomes=10, lowest_gene_value=0, highest_gene_value=9,                          step_size=1, feed_cromosomes=False, fitness_function=constraint)
+
+number_of_cromosomes: (integer) it corresponds to initial minimum and maximum no of cromosomes (population).
+
+length_of_cromosomes: (integer) length of crommosomes.
+
+fitness_function: A lamba function for applying costraint (since i has been proved that lamda-function is complete under general function, we can always find one lamda-function thatv corresponds to a general function).
+
+lowest_gene_value: (integer) a lowest value that any gene may have.
+
+highest_gene_value: (integer) a highest value that any gene may have..
+
+step_size: (float) it corresponds to the granuality in gene values or simply minimum difference in any gene.
+
+        * feed_cromosoms:True to feed your own custom cromosomes values directly in initialise method, else it is False.
+
+
+end_node: end node in graph.
+
+search_type: choose any from:-
+
+* dfs (Depth First Search)
+* bfs (Breadth First Search)
+* hill_climbing (Hill Climbing Algorithm)
+* beam (Beam Search)
+* best_first (Best First Search)
+* branch_and_bound (Branch and Bound Search Algorithm)
+* A* (A* Search Algoritm).
