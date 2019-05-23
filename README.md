@@ -1,11 +1,10 @@
 # Artificial-Intelligence
 
-AI Algorithms
+Implementation of AI Algorithms.
 
---Installation
+--Installation:
 
 clone the this reporitory using,
-
 `https://github.com/abecus/Artificial-Intelligence.git`
 
 ## 1. searches
@@ -13,7 +12,8 @@ clone the this reporitory using,
 seaerches is a python script use to apply searches on graphs, trees or search spaces.
 It currently having Breath First Search and Depth First Search, Other type of searches will be updated soon.
 
---Installation
+--Installation:
+
 searches runs on python 3.x. You can install the python requirements with
 `python3 -m pip install pandas`.
 
@@ -126,7 +126,8 @@ first, second, third and fourth columns consists the nodes 'From' at where an ed
 Genetic Optimiser is python script which try to mimic the natural evolution (that, survival of the fittest).
 It currently provides some customisable methods like mutation, crossover and evolution types.
 
---Installation
+--Installation:
+
 searches runs on python 3.x. You can install the python requirements with
 `python3 -m pip install numpy`.
 
