@@ -1,13 +1,19 @@
 # Artificial-Intelligence
 
-AI Algorithms
+Implementation of AI Algorithms.
+
+--Installation:
+
+clone the this reporitory using,
+`https://github.com/abecus/Artificial-Intelligence.git`
 
 ## 1. searches
 
 seaerches is a python script use to apply searches on graphs, trees or search spaces.
 It currently having Breath First Search and Depth First Search, Other type of searches will be updated soon.
 
---Installation
+--Installation:
+
 searches runs on python 3.x. You can install the python requirements with
 `python3 -m pip install pandas`.
 
@@ -120,37 +126,49 @@ first, second, third and fourth columns consists the nodes 'From' at where an ed
 Genetic Optimiser is python script which try to mimic the natural evolution (that, survival of the fittest).
 It currently provides some customisable methods like mutation, crossover and evolution types.
 
---Installation
+--Installation:
+
 searches runs on python 3.x. You can install the python requirements with
 `python3 -m pip install numpy`.
 
 ### Using GeneticOptimiser
 
-    GeneticOptimiser(number_of_cromosomes=50, length_of_cromosomes=10, lowest_gene_value=0, highest_gene_value=9,                          step_size=1, feed_cromosomes=False, fitness_function=constraint)
+    GeneticOptimiser(number_of_cromosomes=50, length_of_cromosomes=10,lowest_gene_value=0, highest_gene_value=9, step_size=1, feed_cromosomes=False, fitness_function=constraint)
 
 number_of_cromosomes: (integer) it corresponds to initial minimum and maximum no of cromosomes (population).
 
 length_of_cromosomes: (integer) length of crommosomes.
 
-fitness_function: A lamba function for applying costraint (since i has been proved that lamda-function is complete under general function, we can always find one lamda-function thatv corresponds to a general function).
-
 lowest_gene_value: (integer) a lowest value that any gene may have.
 
-highest_gene_value: (integer) a highest value that any gene may have..
+highest_gene_value: (integer) a highest value that any gene may have.
 
-step_size: (float) it corresponds to the granuality in gene values or simply minimum difference in any gene.
+step_size: (float) it corresponds to the granuality in gene values or simply minimum difference in any two gene.
 
-        * feed_cromosoms:True to feed your own custom cromosomes values directly in initialise method, else it is False.
+feed_cromosoms: True to feed your own custom cromosomes values directly in initialise method, else it is False.
 
+fitness_function: A lamba function for applying costraint (since i has been proved that lamda-function is complete under general function, we can always find one lamda-function thatv corresponds to a general function).
 
-end_node: end node in graph.
+Try running the following:
 
-search_type: choose any from:-
+    croms = GeneticOptimiser(number_of_cromosomes=5, length_of_cromosomes=4, lowest_gene_value=0, highest_gene_value=1, step_size=1, fitness_function=(lambda x: x[0]-x[1]+x[2]-x[3]))
 
-* dfs (Depth First Search)
-* bfs (Breadth First Search)
-* hill_climbing (Hill Climbing Algorithm)
-* beam (Beam Search)
-* best_first (Best First Search)
-* branch_and_bound (Branch and Bound Search Algorithm)
-* A* (A* Search Algoritm).
+    croms.run(threshold=2)
+
+### Output
+
+iterations may vary (obviously).
+
+        best cromosomes found is [1 0 1 0],  with 2 fitness value and in 2 iterations
+        
+To feed your own cromosomes:
+
+        own_croms = np.array([[1, 0], [0, 0]])
+
+        croms = GeneticOptimiser(number_of_cromosomes=2, length_of_cromosomes=2, lowest_gene_value=0, highest_gene_value=1, step_size=1, feed_cromosomes=True, fitness_function=(lambda x: x[0]-x[1]))
+
+        croms.initialise(manual_cromosomes=own_croms)
+        
+        print(croms.cromosomes)
+
+An example might be useful to get use to it, which can be found in 'example1.py' file (read that file).

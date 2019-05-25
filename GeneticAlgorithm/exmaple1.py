@@ -28,11 +28,9 @@ croms.run(threshold=45)
 
 
 # output comes out to be
-
 '''
 best cromosomes found is [9 0 9 0 9 0 9 0 9 0],  with 45 fitness value and in 64 iterations
 '''
-
 #%%
 ''' 
 for finding minimun value in that array
