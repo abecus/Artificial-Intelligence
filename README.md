@@ -171,8 +171,5 @@ To feed your own cromosomes:
         
         print(croms.cromosomes)
 
-<<<<<<< HEAD
+
 An example might be useful to get use to it, which can be found in 'example1.py' file (read that file).
-=======
-An example might be useful to get use to it, which can be found in 'example1.py' file (read that file).
->>>>>>> 80e1b8a7d6769bf0165dc83d528bc026dfc6b8f9
