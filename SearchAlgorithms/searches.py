@@ -120,7 +120,7 @@ class Searches():
         return self.queue
 
 
-    def search(self, starting_node, end_node, search_type='bfs', extended_nodes=True, max_depth=50, beam=2, verbose=0):
+    def run(self, starting_node, end_node, search_type='bfs', extended_nodes=True, max_depth=50, beam=2, verbose=0):
         
         if verbose > 0:    print(f'starting search with {search_type}')
         self.initialise(starting_node, end_node, verbose)
@@ -221,7 +221,7 @@ if __name__ == "__main__":
         s = Searches(path)
         # print(s.paths)
 
-        s.search('a','g', search_type='A*', max_depth=10, extended_nodes=True, verbose=2)
+        s.run('a','g', search_type='A*', max_depth=10, extended_nodes=True, verbose=2)
         # s.search('e', 'g', search_type='bfs')
         print(s.path_to_goal())
         print(s.depth)

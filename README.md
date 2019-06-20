@@ -19,7 +19,7 @@ searches runs on python 3.x. You can install the python requirements with
 
 ### Using Searches
 
-    search(starting_node, end_node, search_type='bfs', extended_nodes=True, max_depth=50, beam=2, verbose=0)
+    run(starting_node, end_node, search_type='bfs', extended_nodes=True, max_depth=50, beam=2, verbose=0)
 
 starting_node: start node in graph.
 
@@ -47,7 +47,7 @@ Try running the following:
 
     s =  Searches('...\searches\paths.csv')
     print(s.paths)
-    s.search('s', 'g', search_type='A*', depth=10, extended_nodes=True, verbose=2)
+    s.run('s', 'g', search_type='A*', depth=10, extended_nodes=True, verbose=2)
     print(s.path_to_goal())
     print(s.depth)
     print(s.cost)
