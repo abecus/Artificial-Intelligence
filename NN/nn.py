@@ -1,8 +1,8 @@
-from nn_utils import *
+from NN.nn_utils import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-def nn_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, print_cost=False):
+def model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, print_cost=False):
     """
     Implements a L-layer neural network: [LINEAR->RELU]*(L-1)->LINEAR->SIGMOID.
     
@@ -21,7 +21,7 @@ def nn_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, print
     np.random.seed(1)
     costs = []                         # keep track of cost
     
-    # Parameters initialization.
+    # Parameters initialization. (≈ 1 line of code)
     parameters = initialize_parameters(layers_dims)
     
     # Loop (gradient descent)
@@ -29,7 +29,7 @@ def nn_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, print
 
         # Forward propagation: [LINEAR -> RELU]*(L-1) -> LINEAR -> SIGMOID.
         AL, caches = model_forward(X, parameters)
-
+        
         # Compute cost.
         cost = compute_cost(AL, Y)
     
@@ -40,9 +40,9 @@ def nn_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, print
         parameters = update_parameters(parameters, grads, learning_rate)
                 
         # Print the cost every 100 training example
-        if print_cost and i % 1 == 0:
-            print ("Cost after iteration %i: %f" % (i, cost))
-        if print_cost and i % 1 == 0:
+        if print_cost and i % 100 == 0:
+            print ("Cost after iteration %i: %f" %(i, cost))
+        if print_cost and i % 100 == 0:
             costs.append(cost)
             
     # plot the cost
