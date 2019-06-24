@@ -7,7 +7,7 @@ adds to the sum and say array is of size 10 (no of elements).
 It has each element from 0 to 9 and say, they are intigers
 '''
 #%%
-from GeneticAlgorithm.GeneticOptimiser import GeneticOptimiser
+from geneticAlgorithm.geneticOptimiser import GeneticOptimiser
 import numpy as np
 
 #%%

@@ -64,17 +64,19 @@ class GeneticOptimiser():
             self.cromosomes = self.rand_with_step(size=(self.number, self.length))
 
 
-    def mutation(self, maxnumber=0.45, alpha=1):
+    def mutation(self, maxnumber_mutation=0.9, alpha_mutation=.45):
         ''' 
-        * alpha from 0 to 1 controles how much of the Cromosomes will get mutated.
+        mutates lower alpha*100 % of the population(cromosomes) except best cromosome(first cromosome)
 
-        * maxnumber is for maximum how much gene is to be mutated.
+        * maxnumber_mutation from 0 to 1 controles how much of the Cromosomes will get mutated.
+
+        * alpha_mutation is for maximum how much gene is to be mutated.
         '''
 
-        for i in range(math.ceil(alpha*self.number)):
+        for i in range(math.floor(maxnumber_mutation*self.number)-1, 0, -1):
             ''' initial cromosomes will get mutated '''
 
-            a = random.choice(range(1, math.ceil(maxnumber*self.length)+1))
+            a = random.choice(range(1, math.ceil(alpha_mutation*self.length)+1))
             gene_to_mutate = random.sample(range(self.length), a)
             '''
             gene_to_mutate is for choosing the which gene is to be mutated for a 
@@ -85,19 +87,19 @@ class GeneticOptimiser():
                 self.cromosomes[i][j] = self.rand_with_step(1)
 
 
-    def crossover(self, type='uniform', beta=0.45, gamma=0.45):
+    def crossover(self, type='uniform', maxnumber_cross=0.45, alpha_cross=0.45):
         ''' 
         it will do uniform crossover in the cromosomes
 
-        * gamma defines how much top percentile of cromosomes will cross over
+        * maxnumber_cross controles how much top cromosomes will cross over
 
-        * beta is for how much genes will cross over
+        * alpha_cross is for how much genes will cross over
         '''
-        n = math.ceil(gamma*self.number)
+        n = math.ceil(maxnumber_cross*self.number)
         self.cromosomes = np.vstack((self.cromosomes, self.cromosomes))
 
         for i in range(n):
-            to_cross =  random.sample(range(self.length), k=math.ceil(beta*self.length))
+            to_cross =  random.sample(range(self.length), k=math.ceil(alpha_cross*self.length))
 
             for gene in to_cross:
                 self.cromosomes[self.length+i][gene] = self.cromosomes[i+1][gene]
@@ -110,11 +112,11 @@ class GeneticOptimiser():
         * reverse is whether to put the genes in ascending(False) or descending(True) order.
         '''
         self.cromosomes = sorted(self.cromosomes, key=self.FitnessFunction, reverse=reverse)
-        self.cromosomes = self.cromosomes[:self.number]
+        self.cromosomes = self.cromosomes[:self.number][:]
 
 
-    def run(self, threshold, iterations=1000, epsilon=0, maxnumber=0.45, 
-            alpha=1, type='uniform', beta=0.45, gamma=0.45, reverse=True):
+    def run(self, threshold, iterations=1000, epsilon=0, maxnumber_mutation=0.45, 
+            alpha_mutation=1, type='uniform', maxnumber_cross=0.45, alpha_cross=0.45, reverse=True):
 
         '''
         * runs a simple optimiser. needs to give a threshold that is indicator of minimum fitness value we want
@@ -135,14 +137,14 @@ class GeneticOptimiser():
         if reverse==True:  
 
             while epsilon < thres:
-                self.crossover(type='uniform', beta=0.45, gamma=0.45)
+                self.crossover(type='uniform', maxnumber_cross=0.45, alpha_cross=0.45)
                     
-                self.mutation(maxnumber=0.45, alpha=1)
+                self.mutation(maxnumber_mutation=0.45, alpha_mutation=1)
                 self.evolve(reverse)
                     
                 best_crom = self.cromosomes[0]
                 epsilon = self.FitnessFunction(best_crom)
-
+                
                 if i >= iterations:
                     break
                 i += 1
@@ -151,9 +153,9 @@ class GeneticOptimiser():
 
             while epsilon > thres:
 
-                self.crossover(type='uniform', beta=0.45, gamma=0.45)
+                self.crossover(type='uniform', maxnumber_cross=0.45, alpha_cross=0.45)
                     
-                self.mutation(maxnumber=0.45, alpha=1)
+                self.mutation(maxnumber_mutation=0.45, alpha_mutation=1)
                 self.evolve(reverse)
                     
                 best_crom = self.cromosomes[0]
@@ -164,20 +166,20 @@ class GeneticOptimiser():
                 i += 1
         
         print(f'best cromosomes found is {best_crom},  with {epsilon} fitness value and in {i} iterations')
-
-
 #%%
 if __name__ == "__main__":
-
-    # croms = GeneticOptimiser(number_of_cromosomes=5, length_of_cromosomes=4, lowest_gene_value=0,
-    #         highest_gene_value=1, step_size=1, fitness_function=(lambda x: x[0]-x[1]+x[2]-x[3]))
-
-    # croms.run(threshold=2)
-
     own_croms = np.array([[1, 0], [0, 0]])
 
-    croms = GeneticOptimiser(number_of_cromosomes=2, length_of_cromosomes=2, lowest_gene_value=0,
-                highest_gene_value=1, step_size=1, feed_cromosomes=True, fitness_function=(lambda x: x[0]-x[1]))
+    # croms = GeneticOptimiser(number_of_cromosomes=4, length_of_cromosomes=3, lowest_gene_value=0,
+    #     highest_gene_value=2, step_size=1, fitness_function=(lambda x:x [1]))
 
-    croms.initialise(manual_cromosomes=own_croms)
-    print(croms.cromosomes)
+    constraint = (lambda x: x[0]-x[1]+x[2]-x[3]+x[4]-x[5]+x[6]-x[7]+x[8]-x[9])
+
+    '''
+    we define Genetic Optimiser as
+    # '''
+    croms = GeneticOptimiser(number_of_cromosomes=100, length_of_cromosomes=10, lowest_gene_value=0,
+                    highest_gene_value=9, step_size=1, feed_cromosomes=False, fitness_function=constraint)
+
+    '''now running the optimiser'''
+    croms.run(threshold=45)

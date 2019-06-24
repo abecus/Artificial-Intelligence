@@ -226,3 +226,4 @@ if __name__ == "__main__":
         print(s.path_to_goal())
         print(s.depth)
         print(s.cost)
+        
