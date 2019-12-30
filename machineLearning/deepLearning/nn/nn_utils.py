@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def sigmoid(Z):
     """
@@ -110,7 +112,7 @@ def leaky_relu_backward(dA, cache, alpha=0.01):
         
     return dZ
 
-def initialize_parameters(layer_dims):
+def initialize_parameters(layer_dims, init_type='random', factor=0.01):
     """
     Arguments:
     layer_dims -- python array (list) containing the dimensions of each layer in our network
@@ -120,19 +122,54 @@ def initialize_parameters(layer_dims):
                     Wl -- weight matrix of shape (layer_dims[l], layer_dims[l-1])
                     bl -- bias vector of shape (layer_dims[l], 1)
     """
-    
-    np.random.seed(1)
-    parameters = {}
-    L = len(layer_dims)            # number of layers in the network
 
-    for l in range(1, L):
-        parameters['W' + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) / np.sqrt(layer_dims[l-1]) #*0.01
+    np.random.seed(3)
+    parameters = {}
+    L = len(layer_dims) - 1 # integer representing the number of layers
+     
+    for l in range(1, L + 1):
+                
+        mat = np.random.randn(layer_dims[l], layer_dims[l-1])
+        for i, row in enumerate(mat):
+            mat[i-1] = row*(1/np.sum(np.abs(row)))
+            
+        parameters['W' + str(l)] = mat
+#         np.random.randn(layer_dims[l], layer_dims[l-1])*(2/layer_dims[l-1])**0.5
         parameters['b' + str(l)] = np.zeros((layer_dims[l], 1))
+
+    if init_type == 'random':
+        for l in range(1, L):
+            parameters['W' + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) * factor
+            parameters['b' + str(l)] = np.zeros((layer_dims[l], 1))
+
+    else:
         
+        if init_type == 'xavier':
+            for l in range(1, L+1):
+                parameters['W' + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) / np.sqrt(1/layer_dims[l-1])
+                parameters['b' + str(l)] = np.zeros((layer_dims[l], 1))
+
+        elif init_type == 'he':
+            for l in range(1, L+1):
+                parameters['W' + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) / np.sqrt(2/layer_dims[l-1])
+                parameters['b' + str(l)] = np.zeros((layer_dims[l], 1))
+
+        elif init_type == 'new':
+            for l in range(1, L+1):
+
+                mat = np.random.randn(layer_dims[l], layer_dims[l-1])
+                for i, row in enumerate(mat):
+                    mat[i-1] = row*(1/np.sum(np.abs(row)))
+
+                parameters['W' + str(l)] = mat
+                parameters['b' + str(l)] = np.zeros((layer_dims[l], 1))
+
+        else:
+            raise TypeError("Only random, xavier or new are allowed")
+
         assert(parameters['W' + str(l)].shape == (layer_dims[l], layer_dims[l-1]))
         assert(parameters['b' + str(l)].shape == (layer_dims[l], 1))
 
-        
     return parameters
 
 def linear_forward(A, W, b):
@@ -222,7 +259,7 @@ def model_forward(X, parameters):
     AL, cache = linear_activation_forward(A, parameters['W' + str(L)], parameters['b' + str(L)], activation = "sigmoid")
     caches.append(cache)
     
-    assert(AL.shape == (1,X.shape[1]))
+    assert(AL.shape == (1, X.shape[1]))
             
     return AL, caches
 
@@ -244,7 +281,7 @@ def compute_cost(AL, Y):
     try:
         cost = (1./m) * (-np.dot(Y,np.log(AL).T) - np.dot(1-Y, np.log(1-AL).T))
     except ZeroDivisionError:
-        cost = 0
+        return "do somthing zero div error"
     
     cost = np.squeeze(cost)      # To make sure your cost's shape is what we expect (e.g. this turns [[17]] into 17).
     assert(cost.shape == ())
@@ -435,3 +472,21 @@ def binary_class_predict(X, y, parameters):
     print("Accuracy: "  + str(np.sum((p == y)/m)))
         
     return p
+
+
+def plot_decision_boundary(model, X, y):
+    # Set min and max values and give it some padding
+    x_min, x_max = X[0, :].min() - 1, X[0, :].max() + 1
+    y_min, y_max = X[1, :].min() - 1, X[1, :].max() + 1
+    h = 0.01
+    # Generate a grid of points with distance h between them
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+    # Predict the function value for the whole grid
+    Z = model(np.c_[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+    # Plot the contour and training examples
+    plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral)
+    plt.ylabel('x2')
+    plt.xlabel('x1')
+    plt.scatter(X[0, :], X[1, :], c=y, cmap=plt.cm.Spectral)
+    plt.show()

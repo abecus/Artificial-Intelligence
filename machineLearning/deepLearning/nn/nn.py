@@ -1,4 +1,4 @@
-from nn.nn_utils import *
+from nn_utils import *   # dont change the import of this line (change if you know, what you are doing.)
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -22,7 +22,7 @@ def model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, prin
     costs = []                         # keep track of cost
     
     # Parameters initialization. (≈ 1 line of code)
-    parameters = initialize_parameters(layers_dims)
+    parameters = initialize_parameters(layers_dims, init_type='random')
     
     # Loop (gradient descent)
     for i in range(0, num_iterations):
