@@ -1,4 +1,8 @@
 #%%
+
+# These algorithm were create in my early learning times when i did not know 
+# the time and space complexities and all so these are just for educational purpose only.
+
 import os
 import pandas as pd
 
@@ -27,8 +31,8 @@ class Searches():
                 else:
                     path.append(self.ans_path[i])
                     path.append('-->')
-            return path
-        except:    pass                
+            return " ".join(path)
+        except:    pass
     
     
     def initialise(self, starting_node, end_node, verbose):
@@ -217,13 +221,13 @@ if __name__ == "__main__":
         # search_types = ['dfs', 'bfs', 'hill_climbing', 'beam', 'best_first','branch_and_bound', 'A*']
         # verbose = [0, 1, 2]
         my_path = os.getcwd()
-        path = os.path.join(my_path, 'new_path.csv')
+        # path = os.path.join(my_path, 'new_path.csv')
+        path = os.path.join(my_path, 'paths3.csv')
         s = Searches(path)
         # print(s.paths)
 
-        s.run('a','g', search_type='A*', max_depth=10, extended_nodes=True, verbose=2)
-        # s.search('e', 'g', search_type='bfs')
+        s.run('s','g', search_type='bfs', max_depth=10, extended_nodes=True, verbose=0)
         print(s.path_to_goal())
-        print(s.depth)
-        print(s.cost)
+        # print(s.depth)
+        # print(s.cost)
         
